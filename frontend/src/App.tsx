@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Menu, Search, ShoppingCart, User, Package, Moon, Sun, ArrowLeft, Send, Sparkles, X, Star, MessageSquare, Plus, Trash2, ChevronLeft, Image as ImageIcon } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 type Product = {
   id: number;
   name: string;
@@ -70,13 +72,13 @@ function App() {
 
   useEffect(() => {
     // Fetch Products
-    fetch('http://localhost:8000/api/products')
+    fetch(`${API_URL}/api/products')
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error("Error fetching products:", err));
 
     // Fetch Orders
-    fetch(`http://localhost:8000/api/orders/${USER_EMAIL}`)
+    fetch(`${API_URL}/api/orders/${USER_EMAIL}`)
       .then(res => res.json())
       .then(data => {
         // Map backend order structure to frontend Order type
@@ -98,13 +100,13 @@ function App() {
       .catch(err => console.error("Error fetching orders:", err));
 
     // Fetch Cart
-    fetch(`http://localhost:8000/api/cart/${USER_EMAIL}`)
+    fetch(`${API_URL}/api/cart/${USER_EMAIL}`)
       .then(res => res.json())
       .then(data => setCart(data))
       .catch(err => console.error("Error fetching cart:", err));
 
     // Fetch Chat Sessions
-    fetch(`http://localhost:8000/api/chat/sessions/${USER_EMAIL}`)
+    fetch(`${API_URL}/api/chat/sessions/${USER_EMAIL}`)
       .then(res => res.json())
       .then(data => setSessions(data))
       .catch(err => console.error("Error fetching sessions:", err));
@@ -122,7 +124,7 @@ function App() {
 
   const addToCart = async (product: Product) => {
     try {
-      await fetch('http://localhost:8000/api/cart/add', {
+      await fetch(`${API_URL}/api/cart/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL, product_id: product.id })
@@ -140,7 +142,7 @@ function App() {
     try {
       // Create an order for each cart item
       for (const item of cart) {
-        await fetch('http://localhost:8000/api/orders/create', {
+        await fetch(`${API_URL}/api/orders/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ customer_email: USER_EMAIL, product_id: item.id })
@@ -148,7 +150,7 @@ function App() {
       }
       
       // Clear the cart on backend
-      await fetch('http://localhost:8000/api/cart/clear', {
+      await fetch(`${API_URL}/api/cart/clear', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL })
@@ -157,7 +159,7 @@ function App() {
       setCart([]);
       
       // Refetch orders to get the real IDs from the backend
-      const res = await fetch(`http://localhost:8000/api/orders/${USER_EMAIL}`);
+      const res = await fetch(`${API_URL}/api/orders/${USER_EMAIL}`);
       const data = await res.json();
       const formattedOrders: Order[] = data.map((o: any) => ({
         id: o.id,
@@ -185,7 +187,7 @@ function App() {
     setActiveSessionId(sessionId);
     setShowHistory(false);
     try {
-      const res = await fetch(`http://localhost:8000/api/chat/messages/${sessionId}`);
+      const res = await fetch(`${API_URL}/api/chat/messages/${sessionId}`);
       const data = await res.json();
       const mapped: ChatMessage[] = data.map((m: any) => ({
         id: m.id.toString(),
@@ -204,7 +206,7 @@ function App() {
 
   const createNewSession = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/chat/sessions/create', {
+      const res = await fetch(`${API_URL}/api/chat/sessions/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL })
@@ -221,7 +223,7 @@ function App() {
   const deleteSession = async (sessionId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     try {
-      await fetch(`http://localhost:8000/api/chat/sessions/${sessionId}`, { method: 'DELETE' });
+      await fetch(`${API_URL}/api/chat/sessions/${sessionId}`, { method: 'DELETE' });
       setSessions(prev => prev.filter(s => s.id !== sessionId));
       if (activeSessionId === sessionId) {
         setActiveSessionId(null);
@@ -255,7 +257,7 @@ function App() {
     setIsTyping(true);
 
     try {
-      const res = await fetch('http://localhost:8000/api/chat', {
+      const res = await fetch(`${API_URL}/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: activeSessionId, message: userText, customer_email: USER_EMAIL, image_base64: base64Img })
@@ -274,7 +276,7 @@ function App() {
       setChatMessages(prev => [...prev, agentMsg]);
 
       // Refresh sessions list to get updated title
-      const sessRes = await fetch(`http://localhost:8000/api/chat/sessions/${USER_EMAIL}`);
+      const sessRes = await fetch(`${API_URL}/api/chat/sessions/${USER_EMAIL}`);
       const sessData = await sessRes.json();
       setSessions(sessData);
     } catch (err) {
@@ -754,7 +756,7 @@ function PoliciesPage() {
   const [policies, setPolicies] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/policies')
+    fetch(`${API_URL}/api/policies')
       .then(res => res.json())
       .then(data => setPolicies(data));
   }, []);
@@ -792,7 +794,7 @@ function InventoryPage() {
   const [inventory, setInventory] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/inventory')
+    fetch(`${API_URL}/api/inventory')
       .then(res => res.json())
       .then(data => setInventory(data));
   }, []);
@@ -844,7 +846,7 @@ function ClaimsPage() {
   useEffect(() => {
     // Poll for new claims every 3 seconds to feel "live"
     const fetchClaims = () => {
-      fetch('http://localhost:8000/api/claims')
+      fetch(`${API_URL}/api/claims')
         .then(res => res.json())
         .then(data => setClaims(data));
     };
@@ -953,7 +955,7 @@ function ManagerPage() {
   const [claims, setClaims] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/claims')
+    fetch(`${API_URL}/api/claims')
       .then(res => res.json())
       .then(data => setClaims(data));
   }, []);
@@ -962,7 +964,7 @@ function ManagerPage() {
     const details = prompt(`Enter resolution details for this ${action.replace('approved_', '')}:`);
     if (!details) return;
 
-    await fetch(`http://localhost:8000/api/manager/claims/${id}/resolve`, {
+    await fetch(`${API_URL}/api/manager/claims/${id}/resolve`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, details })
