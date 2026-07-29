@@ -15,7 +15,6 @@ services:
   - type: web
     name: kite-frontend
     env: static
-    plan: free
     rootDir: frontend
     buildCommand: "npm install && npm run build"
     staticPublishPath: "./dist"
