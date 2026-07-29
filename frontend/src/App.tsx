@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, Link, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Menu, Search, ShoppingCart, User, Package, Moon, Sun, ArrowLeft, Send, Sparkles, X, Star, MessageSquare, Plus, Trash2, ChevronLeft, Image as ImageIcon } from 'lucide-react';
+import { Menu, Search, ShoppingCart, User, Package, Moon, Sun, ArrowLeft, Send, Sparkles, X, MessageSquare, Plus, Trash2, Image as ImageIcon } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -72,7 +72,7 @@ function App() {
 
   useEffect(() => {
     // Fetch Products
-    fetch(`${API_URL}/api/products')
+    fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error("Error fetching products:", err));
@@ -124,7 +124,7 @@ function App() {
 
   const addToCart = async (product: Product) => {
     try {
-      await fetch(`${API_URL}/api/cart/add', {
+      await fetch(`${API_URL}/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL, product_id: product.id })
@@ -142,7 +142,7 @@ function App() {
     try {
       // Create an order for each cart item
       for (const item of cart) {
-        await fetch(`${API_URL}/api/orders/create', {
+        await fetch(`${API_URL}/api/orders/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ customer_email: USER_EMAIL, product_id: item.id })
@@ -150,7 +150,7 @@ function App() {
       }
       
       // Clear the cart on backend
-      await fetch(`${API_URL}/api/cart/clear', {
+      await fetch(`${API_URL}/api/cart/clear`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL })
@@ -206,7 +206,7 @@ function App() {
 
   const createNewSession = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/chat/sessions/create', {
+      const res = await fetch(`${API_URL}/api/chat/sessions/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer_email: USER_EMAIL })
@@ -257,7 +257,7 @@ function App() {
     setIsTyping(true);
 
     try {
-      const res = await fetch(`${API_URL}/api/chat', {
+      const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: activeSessionId, message: userText, customer_email: USER_EMAIL, image_base64: base64Img })
@@ -756,7 +756,7 @@ function PoliciesPage() {
   const [policies, setPolicies] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/policies')
+    fetch(`${API_URL}/api/policies`)
       .then(res => res.json())
       .then(data => setPolicies(data));
   }, []);
@@ -794,7 +794,7 @@ function InventoryPage() {
   const [inventory, setInventory] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/inventory')
+    fetch(`${API_URL}/api/inventory`)
       .then(res => res.json())
       .then(data => setInventory(data));
   }, []);
@@ -846,7 +846,7 @@ function ClaimsPage() {
   useEffect(() => {
     // Poll for new claims every 3 seconds to feel "live"
     const fetchClaims = () => {
-      fetch(`${API_URL}/api/claims')
+      fetch(`${API_URL}/api/claims`)
         .then(res => res.json())
         .then(data => setClaims(data));
     };
@@ -955,7 +955,7 @@ function ManagerPage() {
   const [claims, setClaims] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/claims')
+    fetch(`${API_URL}/api/claims`)
       .then(res => res.json())
       .then(data => setClaims(data));
   }, []);
