@@ -148,3 +148,19 @@ INFO:     Finished server process [69171]
 INFO:     Started server process [69313]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
+INFO:     127.0.0.1:55505 - "GET /api/chat/sessions/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55503 - "GET /api/orders/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55504 - "GET /api/cart/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55501 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55505 - "GET /api/chat/sessions/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55503 - "GET /api/cart/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55507 - "GET /api/orders/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55504 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55575 - "GET /api/cart/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55577 - "GET /api/chat/sessions/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55573 - "GET /api/orders/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55571 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55573 - "GET /api/products HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55577 - "GET /api/orders/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55575 - "GET /api/cart/user%40example.com HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55580 - "GET /api/chat/sessions/user%40example.com HTTP/1.1" 200 OK
