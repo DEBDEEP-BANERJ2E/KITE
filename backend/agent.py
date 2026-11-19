@@ -4,7 +4,7 @@ from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langchain_groq import ChatGroq
-from langchain_core.messages import BaseMessage, SystemMessage, ToolMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage, ToolMessage
 from langchain_core.tools import tool
 import datetime
 import database
@@ -115,7 +115,7 @@ def evaluate_fraud_and_consistency(order_id: str, complaint_text: str) -> str:
     if claim_count >= 2:
         flags.append("FREQUENT_CLAIMS")
         
-    llm = ChatGroq(model_name="qwen/qwen3.6-27b", temperature=0)
+    llm = ChatGroq(model_name="qwen/qwen3.8-27b", temperature=0, max_tokens=10, reasoning_effort="none")
     prompt = f"Does this complaint/evidence: '{complaint_text}' make sense for the product: '{product_name}'? Respond with only 'YES' or 'NO'."
     try:
         consistency = llm.invoke([HumanMessage(content=prompt)]).content.strip().upper()
@@ -132,7 +132,7 @@ def evaluate_fraud_and_consistency(order_id: str, complaint_text: str) -> str:
 tools = [get_order_status, finalize_resolution, check_inventory, check_policy_eligibility, evaluate_fraud_and_consistency]
 
 def call_model(state: AgentState):
-    llm = ChatGroq(model_name="qwen/qwen3.6-27b", temperature=0)
+    llm = ChatGroq(model_name="qwen/qwen3.8-27b", temperature=0, max_tokens=512, reasoning_effort="none")
     llm_with_tools = llm.bind_tools(tools)
     
     sys_msg = SystemMessage(content=(
