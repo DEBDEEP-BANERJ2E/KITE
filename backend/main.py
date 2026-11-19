@@ -179,7 +179,7 @@ def get_chat_messages(session_id: str):
     return [dict(m) for m in messages]
 
 def analyze_image_with_vision(image_base64: str, complaint_text: str) -> str:
-    llm = ChatGroq(model_name="llama-3.2-11b-vision-preview", temperature=0)
+    llm = ChatGroq(model_name="qwen/qwen3.8-27b", temperature=0, max_tokens=300, reasoning_effort="none")
     msg = HumanMessage(
         content=[
             {"type": "text", "text": f"Analyze this image based on the user complaint: '{complaint_text}'. Does the image match the complaint? Is the damage visible? Provide a concise summary of what you see in the image."},
